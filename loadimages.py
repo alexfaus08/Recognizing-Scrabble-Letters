@@ -17,10 +17,15 @@ urls = df.labeled_data
 
 X = []
 i = 0
-for url in urls:
-    X.append(open_image(url))
-    print(i)
-    i += 1
+try:
+    for url in urls:
+        X.append(open_image(url))
+        print(i)
+        i += 1
+except:
+    X = np.asarray(X)
+
+    np.save("data", X)
 
 X = np.asarray(X)
 
