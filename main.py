@@ -27,3 +27,35 @@ Y_train = onehot_encoder.fit_transform(integer_encoded)
 
 # reshape X data
 X_train = X_train.transpose().reshape(-1, 50*50)
+
+# set the random seed
+np.random.seed(3520)
+
+# Set/get relevant parameters
+num_inputs = 2500  # from X_train.shape
+num_outputs = 27  # 26 letters plus skip
+batch_size = 100
+learning_rate = .02
+epochs = 100
+
+# 2500
+model = Sequential()
+# Hidden Layers
+model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
+model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
+# Output Layer
+model.add(Dense(units=num_outputs, activation='softmax'))
+# Set learning rate
+sgd = keras.optimizers.SGD(lr=learning_rate)
+model.compile(loss='mean_squared_error', optimizer=sgd, metrics=['accuracy'])
+# Print Summary
+model.summary()
+
+history = model.fit(X_train, Y_train,
+          batch_size=batch_size,
+          epochs=epochs,
+          verbose=2)
+
+score = model.evaluate(X_train, Y_train, verbose=0)
+print("Test loss: ", score[0])
+print("Test accuracy: {0} %".format(score[1] * 100))
