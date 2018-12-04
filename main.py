@@ -9,6 +9,8 @@ from numpy import array
 from numpy import argmax
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
+from keras.models import model_from_json
+import os
 
 # load training data from numpy files
 X_train = np.load("resized_data.npy")
@@ -41,10 +43,11 @@ epochs = 100
 # 2500
 model = Sequential()
 # Hidden Layers
-model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
-model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
+model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
+model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
+model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
 # Output Layer
-model.add(Dense(units=num_outputs, activation='softmax'))
+model.add(Dense(units=num_outputs, activation='sigmoid'))
 # Set learning rate
 sgd = keras.optimizers.SGD(lr=learning_rate)
 model.compile(loss='mean_squared_error', optimizer=sgd, metrics=['accuracy'])
@@ -59,3 +62,15 @@ history = model.fit(X_train, Y_train,
 score = model.evaluate(X_train, Y_train, verbose=0)
 print("Test loss: ", score[0])
 print("Test accuracy: {0} %".format(score[1] * 100))
+
+# code taken from: https://machinelearningmastery.com/save-load-keras-deep-learning-models/
+# Save and Load Your Keras Deep Learning Models
+# by Jason Brownlee on June 13, 2016 in Deep Learning
+
+# # serialize model to JSON
+# model_json = model.to_json()
+# with open("model.json", "w") as json_file:
+#     json_file.write(model_json)
+# # serialize weights to HDF5
+# model.save_weights("model.h5")
+# print("Saved model to disk")
