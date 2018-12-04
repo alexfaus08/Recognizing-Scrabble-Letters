@@ -11,7 +11,7 @@ def open_image (url):
     image = io.imread(url)
     return image
 
-fields = ["labeled_data", "Label"]
+fields = ["labeled_data"]
 
 df = pandas.read_csv('letters.csv', skipinitialspace=True, usecols=fields)
 print(df.keys())
