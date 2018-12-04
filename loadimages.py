@@ -2,6 +2,10 @@ from skimage import io
 import cv2
 import pandas
 import numpy as np
+import time
+
+timestr = time.strftime("%Y-%m-%d %H:%M%:%S")
+
 
 def open_image (url):
     image = io.imread(url)
@@ -25,9 +29,9 @@ try:
 except:
     X = np.asarray(X)
 
-    np.save("data", X)
+    np.save("data " + timestr, X)
 
 X = np.asarray(X)
 
-np.save("data", X)
+np.save("data " + timestr, X)
 
