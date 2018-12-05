@@ -1,16 +1,14 @@
 import numpy as np
-import cv2
-import matplotlib.pyplot as plt
+
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
-from sklearn.metrics import confusion_matrix
+
 from numpy import array
-from numpy import argmax
+
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
-from keras.models import model_from_json
-import os
+
 
 # load training data from numpy files
 X_train = np.load("resized_data.npy")

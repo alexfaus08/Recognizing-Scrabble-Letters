@@ -1,5 +1,4 @@
 from skimage import io
-import cv2
 import pandas
 import numpy as np
 import time
