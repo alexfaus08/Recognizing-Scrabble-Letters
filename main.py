@@ -35,15 +35,14 @@ np.random.seed(3520)
 num_inputs = 2500  # from X_train.shape
 num_outputs = 27  # 26 letters plus skip
 batch_size = 100
-learning_rate = .02
+learning_rate = .1
 epochs = 100
 
 # 2500
 model = Sequential()
 # Hidden Layers
-model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
-model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
-model.add(Dense(units=500, activation='sigmoid', input_dim=num_inputs))
+model.add(Dense(units=1000, activation='relu', input_dim=num_inputs))
+model.add(Dense(units=1500, activation='sigmoid', input_dim=num_inputs))
 # Output Layer
 model.add(Dense(units=num_outputs, activation='sigmoid'))
 # Set learning rate
