@@ -9,6 +9,8 @@ You will need:
 * [OpenCV-python](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_setup/py_table_of_contents_setup/py_table_of_contents_setup.html#py-table-of-content-setup)
 * [pandas](https://pandas.pydata.org/)
 * [scikit-image](http://scikit-image.org/docs/dev/api/skimage.html)
+* [sklearn](https://scikit-learn.org/)
+* [matplotlib.pyplot](https://matplotlib.org/api/pyplot_api.html)
 
 ## File List
 * `letters.csv` Downloaded labeled images of Scrabble letters from [LabelBox](app.labelbox.com) 
