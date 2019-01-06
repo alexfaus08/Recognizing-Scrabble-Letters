@@ -16,6 +16,8 @@ You will need:
 * `loadlabels.py` Converts data (labels) from `letters.csv` to a numpy array
 * `resize_images.py` Takes the numpy array from `loadimages.py` and resizes each element to 100 by 100 and makes them grayscale. 
 * `main.py` creates a [Keras](https://keras.io/) model for recognizing scrabble images
+* `labels.npy` a NumPy file of the labels
+* `resized_data.npy` a NumPy file of the resized and recolored images
 
 ## Author
 * **Alexander Faus**
