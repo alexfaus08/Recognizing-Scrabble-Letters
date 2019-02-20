@@ -1,6 +1,7 @@
 import numpy as np
 
 import keras
+from keras.utils import plot_model
 from keras.models import Sequential
 from keras.layers import Dense
 from numpy import array
@@ -8,6 +9,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
+from keras import losses
+import matrix_print
 
 # load training data from numpy files
 X_train = np.load("resized_data.npy")
@@ -15,6 +18,8 @@ Y_train = np.load("labels.npy")
 # all the indices of the skipped data
 skip = np.where(Y_train == 'skip')
 Y_train = np.delete(Y_train, skip, axis=0)
+X_test = np.load("resized_test_data.npy")
+Y_test = np.load("testing_labels.npy")
 
 # convert string labels to one hot encoding.
 # Code from: https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
@@ -26,13 +31,15 @@ integer_encoded = label_encoder.fit_transform(values)
 onehot_encoder = OneHotEncoder(sparse=False)
 integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
 Y_train = onehot_encoder.fit_transform(integer_encoded)
-
+Y_test = onehot_encoder.fit_transform(integer_encoded)
 # reshape X data
+print(X_train.shape)
 X_train = X_train.transpose().reshape(-1, 50*50)
-
+X_test =  X_test.transpose().reshape(-1, 50*50)
 # delete data that is labeled as skip
 X_train = np.delete(X_train, skip, axis=0)
 X_train = np.true_divide(X_train, 255)
+X_test = np.true_divide(X_train, 255)
 
 # set the random seed
 np.random.seed(3520)
@@ -41,8 +48,8 @@ np.random.seed(3520)
 num_inputs = 2500  # from X_train.shape
 num_outputs = 26  # 26 letters plus skip
 batch_size = 500
-learning_rate = .01
-epochs = 1000
+# learning_rate = .01
+epochs = 200
 
 # 2500
 model = Sequential()
@@ -52,8 +59,8 @@ model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
 # Output Layer
 model.add(Dense(units=num_outputs, activation='softmax'))
 # Set learning rate
-sgd = keras.optimizers.SGD(lr=learning_rate)
-model.compile(loss='mean_squared_error', optimizer="adam", metrics=['accuracy'])
+# sgd = keras.optimizers.SGD(lr=learning_rate)
+model.compile(loss=losses.categorical_crossentropy, optimizer="adam", metrics=['accuracy'])
 # Print Summary
 model.summary()
 
@@ -62,17 +69,17 @@ history = model.fit(X_train, Y_train,
           epochs=epochs,
           verbose=2)
 
-score = model.evaluate(X_train, Y_train, verbose=0)
+score = model.evaluate(X_test, Y_test, verbose=0)
 print("Test loss: ", score[0])
 print("Test accuracy: {0} %".format(score[1] * 100))
 
 # run training data through built NN
-pred = model.predict(X_train)
+pred = model.predict(X_test)
 
 Y_train = np.argmax(Y_train, axis=1)
 pred = np.argmax(pred, axis=1)
 
-cm = confusion_matrix(Y_train, pred)
+# cm = confusion_matrix(Y_test, pred)
 
 labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
           's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -104,10 +111,11 @@ def print_cm(cm, labels, hide_zeroes=False, hide_diagonal=False, hide_threshold=
         print()
 
 
-print_cm(cm, labels)
-
+# print_cm(cm, labels)
+plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 plt.plot(history.history['acc'])
 plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.show()
+# matrix_print.print_mat(cm)

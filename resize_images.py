@@ -10,7 +10,7 @@ def resize_image(image):
     return newimg
 
 
-X = np.load("data 2018-12-03 19:17:22.npy")
+X = np.load("testing_data.npy")
 resized = []
 i = 0
 
@@ -18,7 +18,7 @@ for image in X:
     resized.append(resize_image(image))
 
 np.asarray(resized)
-np.save("resized_data", resized)
+np.save("resized_test_data", resized)
 
 
 
