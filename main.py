@@ -11,6 +11,7 @@ from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
 from keras import losses
 import matrix_print
+from keras.models import load_model
 
 # load training data from numpy files
 X_train = np.load("resized_data.npy")
@@ -39,7 +40,7 @@ X_test =  X_test.transpose().reshape(-1, 50*50)
 # delete data that is labeled as skip
 X_train = np.delete(X_train, skip, axis=0)
 X_train = np.true_divide(X_train, 255)
-X_test = np.true_divide(X_train, 255)
+X_test = np.true_divide(X_test, 255)
 
 # set the random seed
 np.random.seed(3520)
@@ -49,7 +50,7 @@ num_inputs = 2500  # from X_train.shape
 num_outputs = 26  # 26 letters plus skip
 batch_size = 500
 # learning_rate = .01
-epochs = 200
+epochs = 400
 
 # 2500
 model = Sequential()
@@ -60,7 +61,7 @@ model.add(Dense(units=500, activation='relu', input_dim=num_inputs))
 model.add(Dense(units=num_outputs, activation='softmax'))
 # Set learning rate
 # sgd = keras.optimizers.SGD(lr=learning_rate)
-model.compile(loss=losses.categorical_crossentropy, optimizer="adam", metrics=['accuracy'])
+model.compile(loss=losses.mean_squared_error, optimizer="adam", metrics=['accuracy'])
 # Print Summary
 model.summary()
 
@@ -72,6 +73,13 @@ history = model.fit(X_train, Y_train,
 score = model.evaluate(X_test, Y_test, verbose=0)
 print("Test loss: ", score[0])
 print("Test accuracy: {0} %".format(score[1] * 100))
+
+model.save('my_model.h5')  # creates a HDF5 file 'my_model.h5'
+del model  # deletes the existing model
+
+# returns a compiled model
+# identical to the previous one
+model = load_model('my_model.h5')
 
 # run training data through built NN
 pred = model.predict(X_test)

@@ -8,6 +8,8 @@ from skimage import io
 import time
 
 
+# loads testing data
+
 def extract_label(label):
     if (label[0] == '{'):
         # it is a letter
@@ -76,6 +78,8 @@ Y = np.asarray(Y)
 skipped = np.where(Y == "skip")
 X = np.delete(X, skipped)
 Y = np.delete(Y, skipped)
+
+
 
 np.save("testing_labels", Y)
 
