@@ -1,47 +1,23 @@
 import numpy as np
 
-import keras
+
 from keras.utils import plot_model
 from keras.models import Sequential
 from keras.layers import Dense
-from numpy import array
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
 from keras import losses
 import matrix_print
 from keras.models import load_model
+import convert_arrays
 
-# load training data from numpy files
-X_train = np.load("resized_data.npy")
-Y_train = np.load("labels.npy")
-# all the indices of the skipped data
-skip = np.where(Y_train == 'skip')
-Y_train = np.delete(Y_train, skip, axis=0)
-X_test = np.load("resized_test_data.npy")
-Y_test = np.load("testing_labels.npy")
+X = np.load("data.npy")
+Y = np.load("labels.npy")
+X, Y = convert_arrays.convert_arrays(X, Y)
+X_train = X[:2000]
+Y_train = Y[:2000]
 
-# convert string labels to one hot encoding.
-# Code from: https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
-# How to One Hot Encode Sequence Data in Python by Jason Brownlee on July 12, 2017 in Long Short-Term Memory Networks
-values = array(Y_train)
-label_encoder = LabelEncoder()
-integer_encoded = label_encoder.fit_transform(values)
-
-onehot_encoder = OneHotEncoder(sparse=False)
-integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
-Y_train = onehot_encoder.fit_transform(integer_encoded)
-Y_test = onehot_encoder.fit_transform(integer_encoded)
-# reshape X data
-print(X_train.shape)
-X_train = X_train.transpose().reshape(-1, 50*50)
-X_test =  X_test.transpose().reshape(-1, 50*50)
-# delete data that is labeled as skip
-X_train = np.delete(X_train, skip, axis=0)
-X_train = np.true_divide(X_train, 255)
-X_test = np.true_divide(X_test, 255)
-
+X_test = X[2000:]
+Y_test = Y[2000:]
 # set the random seed
 np.random.seed(3520)
 
@@ -68,18 +44,18 @@ model.summary()
 history = model.fit(X_train, Y_train,
           batch_size=batch_size,
           epochs=epochs,
-          verbose=2)
+          verbose=2, validation_data=(X_test, Y_test))
 
 score = model.evaluate(X_test, Y_test, verbose=0)
 print("Test loss: ", score[0])
 print("Test accuracy: {0} %".format(score[1] * 100))
 
-model.save('my_model.h5')  # creates a HDF5 file 'my_model.h5'
+model.save('my_model_tweaked.h5')  # creates a HDF5 file 'my_model.h5'
 del model  # deletes the existing model
 
 # returns a compiled model
 # identical to the previous one
-model = load_model('my_model.h5')
+model = load_model('my_model_tweaked.h5')
 
 # run training data through built NN
 pred = model.predict(X_test)

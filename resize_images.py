@@ -10,6 +10,13 @@ def resize_image(image):
     return newimg
 
 
+def resize_array(data):
+    resized = []
+    for image in data:
+        resized.append(resize_image(image))
+
+    return np.asarray(resized)
+
 X = np.load("testing_data.npy")
 resized = []
 i = 0

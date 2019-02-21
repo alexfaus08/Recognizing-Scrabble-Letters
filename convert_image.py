@@ -24,13 +24,13 @@ root.withdraw()
 
 file_path = filedialog.askopenfilename()
 
-fields = ["Label"]
+fields = ["label"]
 
 df = pandas.read_csv(file_path, skipinitialspace=True, usecols=fields)
 
-print(df.Label)
+print(df.label)
 
-labels = df.Label
+labels = df.label
 
 Y = []
 
@@ -48,13 +48,13 @@ def open_image(url):
     image = io.imread(url)
     return image
 
-fields = ["labeled_data"]
+fields = ["data"]
 
 df = pandas.read_csv(file_path, skipinitialspace=True, usecols=fields)
 print(df.keys())
-print(df.labeled_data)
+print(df.data)
 
-urls = df.labeled_data
+urls = df.data
 
 X = []
 i = 0
@@ -65,7 +65,7 @@ i = 0
 #     i += 1
 #
 i = 0
-for u in range(0, len(urls), 50):
+for u in range(0, len(urls)):
     print(i)
     X.append(open_image(urls[u]))
     Y.append(extract_label(labels[u]))
@@ -81,9 +81,9 @@ Y = np.delete(Y, skipped)
 
 
 
-np.save("testing_labels", Y)
+np.save("labels", Y)
 
-np.save("testing_data", X)
+np.save("data", X)
 
 
 
